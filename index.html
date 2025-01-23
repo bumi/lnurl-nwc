@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>LNURL-pay QR code</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    input[type="text"] {
+      width: 300px;
+      padding: 5px;
+    }
+    button {
+      padding: 5px 10px;
+      margin-left: 10px;
+    }
+    #output {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    #qr_code {
+      margin-top: 25px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Create a LNURL-pay QR code for your NWC connection</h2>
+  <p>
+    <label for="inputString">Your <strong>readonly</strong> connection string:</label>
+    <input type="text" id="nwc" placeholder="nostr+walletconnect://...">
+  </p>
+  <p>
+    <label for="inputString">Name:</label>
+    <input type="text" id="name" placeholder="Choose a name">
+  </p>
+  <button onclick="encodeString()">Generate</button>
+
+
+  <div id="lnurl-result" style="display:none">
+    <h2>Your LNURL:</h2>
+    <div id="qr_code"></div>
+    <input type="text" id="output" />
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+  <script>
+    function base64UrlEncode(str) {
+      // Encode the string as UTF-8
+      const utf8Bytes = new TextEncoder().encode(str);
+      // Convert UTF-8 bytes to a binary string
+      let binaryString = '';
+      utf8Bytes.forEach(byte => {
+        binaryString += String.fromCharCode(byte);
+      });
+      // Encode the binary string in Base64
+      const base64 = btoa(binaryString);
+      // Make the Base64 string URL-safe
+      return base64
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
+    }
+
+    // Bech32 encoding functions for lnurl
+    (function() {
+      'use strict';
+
+      const CHARSET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
+
+      function polymod(values) {
+        let chk = 1;
+        const GENERATOR = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3];
+        for (let p = 0; p < values.length; p++) {
+          const top = chk >>> 25;
+          chk = (chk & 0x1ffffff) << 5 ^ values[p];
+          for (let i = 0; i < 5; i++) {
+            if ((top >>> i) & 1) {
+              chk ^= GENERATOR[i];
+            }
+          }
+        }
+        return chk;
+      }
+
+      function hrpExpand(hrp) {
+        const ret = [];
+        for (let i = 0; i < hrp.length; i++) {
+          const c = hrp.charCodeAt(i);
+          ret.push(c >>> 5);
+        }
+        ret.push(0);
+        for (let i = 0; i < hrp.length; i++) {
+          const c = hrp.charCodeAt(i);
+          ret.push(c & 31);
+        }
+        return ret;
+      }
+
+      function createChecksum(hrp, data) {
+        const values = hrpExpand(hrp).concat(data);
+        const polymodResult = polymod(values.concat([0, 0, 0, 0, 0, 0])) ^ 1;
+        const result = [];
+        for (let i = 0; i < 6; i++) {
+          result.push((polymodResult >>> (5 * (5 - i))) & 31);
+        }
+        return result;
+      }
+
+      function bech32Encode(hrp, data) {
+        const combined = data.concat(createChecksum(hrp, data));
+        let encoded = hrp + '1';
+        for (let i = 0; i < combined.length; i++) {
+          encoded += CHARSET.charAt(combined[i]);
+        }
+        return encoded;
+      }
+
+      function convertBits(data, fromBits, toBits, pad) {
+        let acc = 0;
+        let bits = 0;
+        const result = [];
+        const maxv = (1 << toBits) - 1;
+        for (let i = 0; i < data.length; i++) {
+          const value = data[i];
+          if (value < 0 || value >>> fromBits !== 0) {
+            return null;
+          }
+          acc = (acc << fromBits) | value;
+          bits += fromBits;
+          while (bits >= toBits) {
+            bits -= toBits;
+            result.push((acc >>> bits) & maxv);
+          }
+        }
+        if (pad) {
+          if (bits > 0) {
+            result.push((acc << (toBits - bits)) & maxv);
+          }
+        } else if (bits >= fromBits || ((acc << (toBits - bits)) & maxv)) {
+          return null;
+        }
+        return result;
+      }
+
+      window.lnurlEncode = function(url) {
+        const urlBytes = new TextEncoder('utf-8').encode(url);
+        const fiveBitData = convertBits(urlBytes, 8, 5, true);
+        if (fiveBitData === null) {
+          throw new Error('Could not convert data to 5-bit.');
+        }
+        return bech32Encode('lnurl', fiveBitData);
+      };
+    })();
+
+    function encodeString() {
+      const nwc = document.getElementById('nwc').value;
+      const name = document.getElementById('name').value;
+      if (nwc === '' || name === '') {
+        return;
+      }
+      const encoded = base64UrlEncode(nwc);
+      const url = `${window.origin}/lnurlp/${name}/${encoded}`;
+      const lnurl = window.lnurlEncode(url);
+      document.getElementById('output').value = lnurl;
+
+      document.getElementById('lnurl-result').style.display = "block";
+
+     	var qrcode = new QRCode("qr_code", {
+  	    text: lnurl,
+  	    width: 256,
+  	    height: 256,
+  	    colorDark : "#000000",
+  	    colorLight : "#ffffff",
+  	    correctLevel : QRCode.CorrectLevel.H
+     	});
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "imports": {
+    "@getalby/sdk": "npm:@getalby/sdk@^3.9.0",
+    "hono": "jsr:@hono/hono@^4.5.5"
+  },
+  "tasks": {
+    "dev": "deno run --env --allow-net --allow-env --allow-read --watch src/main.ts",
+    "start": "deno run --allow-net --allow-env --allow-read --cert ./ca-certificate.crt src/main.ts",
+    "test": "deno test --env --allow-env"
+  },
+  "compilerOptions": {
+    "jsx": "precompile",
+    "jsxImportSource": "hono/jsx"
+  }
+}
