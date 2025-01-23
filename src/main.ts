@@ -82,8 +82,14 @@ hono.get("/callback/:name/:nwc", async (c) => {
       throw new Error("No amount provided");
     }
 
-    const connectionSecret = base64UrlDecode(encodedConnectionString);
+    let connectionSecret = base64UrlDecode(encodedConnectionString);
 
+    if (!connectionSecret.startsWith("nostr+walletconnect://")) {
+      connectionSecret = `nostr+walletconnect://${connectionSecret}`;
+    }
+    if (!connectionSecret.match(/relay=/)) {
+      connectionSecret = `${connectionSecret}&relay=wss://relay.getalby.com/v1`
+    }
     const nwcClient = new nwc.NWCClient({
       nostrWalletConnectUrl: connectionSecret,
     });

@@ -40,7 +40,7 @@
     <label for="inputString">Name:</label>
     <input type="text" id="name" placeholder="Choose a name">
   </p>
-  <button onclick="encodeString()">Generate</button>
+  <button id="generate-button">Generate</button>
 
 
   <div id="lnurl-result" style="display:none">
@@ -51,7 +51,9 @@
 
 
   <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
-  <script>
+  <script type="module">
+    import { nwc } from "https://esm.sh/@getalby/sdk@3.9.0"; // jsdelivr.net, skypack.dev also work
+
     function base64UrlEncode(str) {
       // Encode the string as UTF-8
       const utf8Bytes = new TextEncoder().encode(str);
@@ -160,13 +162,30 @@
       };
     })();
 
-    function encodeString() {
-      const nwc = document.getElementById('nwc').value;
+    async function encodeString() {
+      const connectionString = document.getElementById('nwc').value;
       const name = document.getElementById('name').value;
-      if (nwc === '' || name === '') {
+      if (connectionString === '' || name === '') {
         return;
       }
-      const encoded = base64UrlEncode(nwc);
+
+      const nwcClient = new nwc.NWCClient({
+        nostrWalletConnectUrl: connectionString
+      });
+
+      const info = await nwcClient.getInfo();
+
+      if (info.methods.includes("pay_invoice") || info.methods.includes("pay_keysend")) {
+        alert("Please use a read-only connection");
+        return;
+      }
+
+      let strippedConnectionString = `${nwcClient.walletPubkey}?pubkey=${nwcClient.publicKey}&secret=${nwcClient.secret}`;
+      if (nwcClient.relayUrl !== "wss://relay.getalby.com/v1") {
+        strippedConnectionString+= `&relay=${nwcClient.relayUrl}&`;
+      }
+
+      const encoded = base64UrlEncode(strippedConnectionString);
       const url = `${window.origin}/lnurlp/${name}/${encoded}`;
       const lnurl = window.lnurlEncode(url);
       document.getElementById('output').value = lnurl;
@@ -182,6 +201,8 @@
   	    correctLevel : QRCode.CorrectLevel.H
      	});
     }
+
+    document.getElementById("generate-button").addEventListener("click", encodeString);
   </script>
 
 </body>
