@@ -2,7 +2,11 @@
   "version": "4",
   "specifiers": {
     "jsr:@hono/hono@^4.5.5": "4.6.17",
-    "npm:@getalby/sdk@*": "3.9.0"
+    "npm:@getalby/sdk@*": "3.9.0",
+    "npm:@getalby/sdk@^3.9.0": "3.9.0",
+    "npm:bech32@2": "2.0.0",
+    "npm:lz-string@^1.5.0": "1.5.0",
+    "npm:pako@^2.1.0": "2.1.0"
   },
   "jsr": {
     "@hono/hono@4.6.17": {
@@ -56,8 +60,14 @@
         "@scure/base"
       ]
     },
+    "bech32@2.0.0": {
+      "integrity": "sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg=="
+    },
     "emittery@1.0.3": {
       "integrity": "sha512-tJdCJitoy2lrC2ldJcqN4vkqJ00lT+tOWNT1hBJjO/3FDMJa5TTIiYGCKGkn/WfCyOzUMObeohbVTj00fhiLiA=="
+    },
+    "lz-string@1.5.0": {
+      "integrity": "sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ=="
     },
     "nostr-tools@2.9.4": {
       "integrity": "sha512-Powumwkp+EWbdK1T8IsEX4daTLQhtWJvitfZ6OP2BdU1jJZvNlUp3SQB541UYw4uc9jgLbxZW6EZSdZoSfIygQ==",
@@ -73,6 +83,9 @@
     },
     "nostr-wasm@0.1.0": {
       "integrity": "sha512-78BTryCLcLYv96ONU8Ws3Q1JzjlAt+43pWQhIl86xZmWeegYCNLPml7yQ+gG3vR6V5h4XGj+TxO+SS5dsThQIA=="
+    },
+    "pako@2.1.0": {
+      "integrity": "sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug=="
     }
   },
   "remote": {
@@ -104,6 +117,13 @@
     "dependencies": [
       "jsr:@hono/hono@^4.5.5",
       "npm:@getalby/sdk@^3.9.0"
-    ]
+    ],
+    "packageJson": {
+      "dependencies": [
+        "npm:bech32@2",
+        "npm:lz-string@^1.5.0",
+        "npm:pako@^2.1.0"
+      ]
+    }
   }
 }

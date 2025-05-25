@@ -4,12 +4,20 @@
     "hono": "jsr:@hono/hono@^4.5.5"
   },
   "tasks": {
-    "dev": "deno run --env --allow-net --allow-env --allow-read --watch src/main.ts",
-    "start": "deno run --allow-net --allow-env --allow-read --cert ./ca-certificate.crt src/main.ts",
-    "test": "deno test --env --allow-env"
+    "dev": "deno run --env --unstable-kv --allow-net --allow-env --allow-read --watch src/main.ts",
+    "start": "deno run --allow-net --unstable-kv --allow-env --allow-read --cert ./ca-certificate.crt src/main.ts",
+    "test": "deno test --env --unstable-kv --allow-env"
   },
   "compilerOptions": {
     "jsx": "precompile",
     "jsxImportSource": "hono/jsx"
+  },
+  "deploy": {
+    "project": "9853a876-3d61-4d40-bb8e-da257f4aacef",
+    "exclude": [
+      "**/node_modules"
+    ],
+    "include": [],
+    "entrypoint": "src/main.ts"
   }
 }
