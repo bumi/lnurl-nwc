@@ -305,10 +305,44 @@
             margin: 0;
         }
 
-        legend {
+        .legend {
             font-weight: 500;
             margin-bottom: 15px;
             color: var(--text-color);
+        }
+
+        .section-divider {
+            margin: 40px 0;
+            border: none;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .docs-section {
+            margin-top: 40px;
+        }
+
+        .docs-section h2 {
+            color: var(--accent-color);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .docs-section p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .docs-section pre {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .docs-section code {
+            font-family: monospace;
+            color: #e6e6e6;
         }
     </style>
 </head>
@@ -338,13 +372,13 @@
             <fieldset id="advancedSettings" class="advanced-settings">
                 <legend>Advanced Settings</legend>
                 <div class="form-group">
-                    <label for="minSpendable">Minimum Spendable Amount (sats)</label>
-                    <input type="number" id="minSpendable" name="minSpendable" min="1">
+                    <label for="minSendable">Minimum Spendable Amount (sats)</label>
+                    <input type="number" id="minSendable" name="minSendable" min="1">
                 </div>
 
                 <div class="form-group">
-                    <label for="maxSpendable">Maximum Spendable Amount (sats)</label>
-                    <input type="number" id="maxSpendable" name="maxSpendable" min="1">
+                    <label for="maxSendable">Maximum Spendable Amount (sats)</label>
+                    <input type="number" id="maxSendable" name="maxSendable" min="1">
                 </div>
 
                 <div class="form-group" style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
@@ -398,6 +432,38 @@
 
           <div class="copy-feedback">Copied to clipboard!</div>
         </div>
+
+        <hr class="section-divider">
+
+        <div class="docs-section">
+          <h2>How does it work?</h2>
+          <p>
+            This tool creates a permanent LNURL and QR code that connects to your Lightning wallet through NWC (Nostr Wallet Connect).
+          </p>
+          <p>
+            Make sure to use a read-only connection to only allow receiving payments. The connection details are stored securely on the server to provide this service. You maintain full control and can revoke access at any time by deleting the NWC connection from your wallet.
+          </p>
+
+          <h2>API</h2>
+          <p>
+            You can also create LNURLs programmatically using the API endpoint:
+          </p>
+          <pre><code>POST /create
+{
+  "name": "string",
+  "connectionSecret": "string",
+  "minSendable": number (optional),
+  "maxSendable": number (optional),
+  "commentAllowed": boolean,
+  "payerDataAllowed": boolean
+}</code></pre>
+          <p>
+            The endpoint returns a JSON response containing the LNURL:
+          </p>
+          <pre><code>{
+  "lnurl": "lnurl1..."
+}</code></pre>
+        </div>
     </div>
 
     <script type="module">
@@ -428,8 +494,8 @@
             const formData = {
                 name: document.getElementById('name').value,
                 connectionSecret: document.getElementById('secret').value,
-                minSpendable: document.getElementById('minSpendable').value ? parseInt(document.getElementById('minSpendable').value) : undefined,
-                maxSpendable: document.getElementById('maxSpendable').value ? parseInt(document.getElementById('maxSpendable').value) : undefined,
+                minSendable: document.getElementById('minSendable').value ? parseInt(document.getElementById('minSendable').value) : undefined,
+                maxSendable: document.getElementById('maxSendable').value ? parseInt(document.getElementById('maxSendable').value) : undefined,
                 commentAllowed: document.getElementById('commentAllowed').checked,
                 payerDataAllowed: document.getElementById('payerDataAllowed').checked
             };
