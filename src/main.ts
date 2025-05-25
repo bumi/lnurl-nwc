@@ -92,10 +92,11 @@ hono.get("/callback/:uuid", async (c) => {
     if (!amount) {
       throw new Error("No amount provided");
     }
-    if (lnurl.maxSendable && amount > lnurl.maxSendable) {
+    const amountInSatoshis = Math.floor(amount / 1000) * 1000;
+    if (lnurl.maxSendable && amountInSatoshis > lnurl.maxSendable) {
       throw new Error("Amount too high");
     }
-    if (lnurl.minSendable && amount < lnurl.minSendable) {
+    if (lnurl.minSendable && amountInSatoshis < lnurl.minSendable) {
       throw new Error("Amount too low");
     }
 
@@ -105,7 +106,7 @@ hono.get("/callback/:uuid", async (c) => {
     });
 
     const transaction = await nwcClient.makeInvoice({
-      amount: Math.floor(+amount / 1000) * 1000,
+      amount: amount,
       description: comment,
       metadata: {
         comment: comment || undefined,
