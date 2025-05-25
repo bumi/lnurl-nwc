@@ -6,34 +6,48 @@
     <title>NWC LNURL Generator</title>
     <style>
         :root {
-            --primary-color: #1a73e8;
-            --background-color: #f8f9fa;
-            --text-color: #202124;
-            --border-color: #dadce0;
+            --primary-color: #ff9500;
+            --background-color: #1c1c1c;
+            --text-color: #ffffff;
+            --border-color: #333333;
+            --secondary-color: #7b1af7;
+            --accent-color: #ffd700;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 20px;
             background-color: var(--background-color);
             color: var(--text-color);
+            background-color: var(--background-color);
         }
 
         .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: #2a2a2a;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 149, 0, 0.2),
+                        0 0 60px rgba(123, 26, 247, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.2);
+            position: relative;
+            overflow: hidden;
         }
+
+
 
         h1 {
             text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 30px;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 2px 2px 0px var(--primary-color), 4px 4px 0px var(--secondary-color);
+            position: relative;
         }
 
         .form-group {
@@ -48,11 +62,14 @@
 
         input:not([type="checkbox"]) {
             width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
             font-size: 16px;
             box-sizing: border-box;
+            background: #333;
+            color: var(--text-color);
+            transition: all 0.3s;
         }
 
         input[type="checkbox"] {
@@ -69,21 +86,44 @@
         }
 
         button {
-        background-color: var(--primary-color);
-        color: white;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        cursor: pointer;
-        width: 100%;
-        transition: all 0.2s;
-    }
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.3s;
+        }
+
+        button:hover:not(:disabled):after {
+            left: 100%;
+        }
 
     button:disabled {
-        background-color: #ccc;
+        background-color: #444;
         cursor: not-allowed;
         opacity: 0.7;
+        box-shadow: none;
     }
 
     button:hover:not(:disabled) {
@@ -126,7 +166,7 @@
         }
 
         .copy-button:hover {
-            background-color: rgba(26,115,232,0.1);
+            background-color: rgba(255, 149, 0, 0.2);
         }
 
         .copy-button svg {
@@ -196,13 +236,42 @@
         }
 
         .error {
-            color: #d93025;
+            color: #ff4444;
             margin-top: 10px;
             display: none;
             padding: 12px;
-            background-color: #fce8e6;
+            background-color: rgba(255, 68, 68, 0.1);
+            border-radius: 8px;
+            border: 1px solid #ff4444;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .info-box {
+            margin-bottom: 30px;
+            padding: 15px;
+            border-left: 4px solid var(--primary-color);
             border-radius: 4px;
-            border-left: 4px solid #d93025;
+        }
+
+        .info-box p {
+            margin: 0;
+        }
+
+        .info-box p + p {
+            margin-top: 10px;
+        }
+
+        .info-box .primary-text {
+            font-weight: 500;
+        }
+
+        .button-with-icon {
+            background-color: var(--background-color);
+        }
+
+        .icon-margin {
+            margin-right: 5px;
         }
 
         .advanced-settings {
@@ -245,7 +314,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Lightning Payment QR Codes</h1>
+        <h1>⚡ Lightning Payment QR Codes ⚡</h1>
 
         <p style="text-align: center; margin-bottom: 30px; color: var(--text-color); max-width: 500px; margin-left: auto; margin-right: auto;">
             Create shareable QR codes for your self-custodial Lightning wallet! Perfect for accepting payments at your store, website, or events - all while keeping your funds secure in your own wallet. Just paste your NWC connection string and get a permanent QR code that anyone can use to pay you. 🚀⚡
@@ -290,23 +359,23 @@
                 </div>
             </fieldset>
 
-            <button type="submit" id="submitButton">Next</button>
+            <button type="submit" id="submitButton">⚡ Next ⚡</button>
         </form>
 
         <div class="error" id="errorMessage"></div>
 
         <div class="result" id="result">
 
-          <div style="margin-bottom: 30px; padding: 15px; background-color: #e8f0fe; border-left: 4px solid var(--primary-color); border-radius: 4px;">
-            <p style="margin: 0; font-weight: 500;">This is your sharable QR code and LNURL to receive Lightning payments! ⚡</p>
-            <p style="margin-top: 10px; margin-bottom: 0;">Anyone who scans this QR code will be able to send payments to your wallet. You can share it on your website, social media, or print it for in-person use.</p>
-            <p style="margin-top: 10px; margin-bottom: 0;"><strong>Note:</strong> You can delete the NWC connection from your wallet at any time to deactivate this payment link.</p>
+          <div class="info-box">
+            <p class="primary-text">This is your sharable QR code and LNURL to receive Lightning payments! ⚡</p>
+            <p>Anyone who scans this QR code will be able to send payments to your wallet. You can share it on your website, social media, or print it for in-person use.</p>
+            <p><strong>Note:</strong> You can delete the NWC connection from your wallet at any time to deactivate this payment link.</p>
           </div>
 
           <h2>QR Code:</h2>
           <div id="qrcode" role="img" aria-label="QR code containing the LNURL"></div>
           <div class="qr-actions">
-              <button class="download-button" id="downloadButton" title="Download QR code as PNG" style="background-color: var(--background-color);">
+              <button class="download-button button-with-icon" id="downloadButton" title="Download QR code as PNG">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                   </svg>
@@ -319,8 +388,8 @@
               <span id="lnurlText"></span>
           </div>
           <div style="text-align: center; margin-top: 10px;">
-              <button class="copy-button" id="copyButton" title="Copy LNURL to clipboard" style="background-color: var(--background-color);">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 5px;">
+              <button class="copy-button button-with-icon" id="copyButton" title="Copy LNURL to clipboard">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="icon-margin">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
                   </svg>
                   Copy LNURL
