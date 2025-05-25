@@ -35,7 +35,7 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "quiet-mole-30"
-          entrypoint: "deno task start"
+          entrypoint: "src/main.ts"
           root: ""
           
           
