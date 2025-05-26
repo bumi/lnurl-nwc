@@ -92,7 +92,7 @@ hono.get("/callback/:uuid", async (c) => {
     if (!amount) {
       throw new Error("No amount provided");
     }
-    const amountInSatoshis = Math.floor(amount / 1000) * 1000;
+    const amountInSatoshis = Math.floor(amount / 1000);
     if (lnurl.maxSendable && amountInSatoshis > lnurl.maxSendable) {
       throw new Error("Amount too high");
     }
