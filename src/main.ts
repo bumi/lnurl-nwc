@@ -14,6 +14,7 @@ interface Lnurl {
   minSendable?: number;
   maxSendable?: number;
   successMessage?: string;
+  successUrl?: string;
 }
 
 export const PORT = parseInt(Deno.env.get("PORT") || "8080");
@@ -120,10 +121,18 @@ hono.get("/callback/:uuid", async (c) => {
       routes: [],
       pr: transaction.invoice,
     }
-    if (lnurl.successMessage) {
+    if (lnurl.successMessage && !lnurl.successUrl) {
       res.successAction = {
         "tag": "message",
         "message": lnurl.successMessage
+      }
+    } else if (lnurl.successUrl) {
+      res.successAction = {
+        "tag": "url",
+        "url": lnurl.successUrl
+      }
+      if (lnurl.successMessage) {
+        res.successAction.description = lnurl.successMessage;
       }
     };
 

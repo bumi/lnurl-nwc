@@ -371,6 +371,17 @@
 
             <fieldset id="advancedSettings" class="advanced-settings">
                 <legend>Advanced Settings</legend>
+
+                <div class="form-group">
+                    <label for="successMessage">Success Message</label>
+                    <input type="text" id="successMessage" name="successMessage" placeholder="Optional message to show on successful payment">
+                </div>
+
+                <div class="form-group">
+                    <label for="successUrl">Success URL</label>
+                    <input type="url" id="successUrl" name="successUrl" placeholder="Optional URL to redirect after successful payment">
+                </div>
+
                 <div class="form-group">
                     <label for="minSendable">Minimum Spendable Amount (sats)</label>
                     <input type="number" id="minSendable" name="minSendable" min="1">
@@ -391,6 +402,7 @@
                         Allow Payer Data
                     </label>
                 </div>
+
             </fieldset>
 
             <button type="submit" id="submitButton">⚡ Next ⚡</button>
@@ -497,7 +509,9 @@
                 minSendable: document.getElementById('minSendable').value ? parseInt(document.getElementById('minSendable').value) : undefined,
                 maxSendable: document.getElementById('maxSendable').value ? parseInt(document.getElementById('maxSendable').value) : undefined,
                 commentAllowed: document.getElementById('commentAllowed').checked,
-                payerDataAllowed: document.getElementById('payerDataAllowed').checked
+                payerDataAllowed: document.getElementById('payerDataAllowed').checked,
+                successMessage: document.getElementById('successMessage').value.trim() || undefined,
+                successUrl: document.getElementById('successUrl').value.value.trim() || undefined
             };
 
             try {
