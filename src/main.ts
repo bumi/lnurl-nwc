@@ -188,7 +188,9 @@ hono.post("/create", async (c) => {
     minSendable: json.minSendable,
     maxSendable: json.maxSendable,
     commentAllowed: json.commentAllowed,
-    payerDataAllowed: json.payerDataAllowed
+    payerDataAllowed: json.payerDataAllowed,
+    successMessage: json.successMessage,
+    successUrl: json.successUrl
   };
 
   try {
