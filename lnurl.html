@@ -378,6 +378,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="metadataDescription">Description</label>
+                    <input type="text" id="metadataDescription" name="metadataDescription" placeholder="Sats for...">
+                </div>
+
+                <div class="form-group">
                     <label for="successUrl">Success URL</label>
                     <input type="url" id="successUrl" name="successUrl" placeholder="Optional URL to redirect after successful payment">
                 </div>
@@ -465,6 +470,7 @@
   "name": "string",
   "connectionSecret": "string",
   "successMessage": string (optional),
+  "metadataDescription": string (optional),
   "successUrl": string (optional),
   "minSendable": number (optional),
   "maxSendable": number (optional),
@@ -513,7 +519,8 @@
                 commentAllowed: document.getElementById('commentAllowed').checked,
                 payerDataAllowed: document.getElementById('payerDataAllowed').checked,
                 successMessage: document.getElementById('successMessage').value.trim() || undefined,
-                successUrl: document.getElementById('successUrl').value.trim() || undefined
+                successUrl: document.getElementById('successUrl').value.trim() || undefined,
+                metadataDescription: document.getElementById('metadataDescription').value.trim() || undefined
             };
 
             try {
@@ -597,6 +604,6 @@
         });
         };
     </script>
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js"></script>
 </body>
 </html>

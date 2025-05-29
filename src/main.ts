@@ -15,6 +15,7 @@ interface Lnurl {
   maxSendable?: number;
   successMessage?: string;
   successUrl?: string;
+  metadataDescription?: string;
 }
 
 export const PORT = parseInt(Deno.env.get("PORT") || "8080");
@@ -32,9 +33,10 @@ hono.use(secureHeaders());
 hono.use(cors());
 
 function getLnurlMetadata(lnurl: Lnurl): string {
+  const desc = lnurl.metadataDescription || `Sats for ${lnurl.name || "unknown"}`;
   return JSON.stringify([
     ["text/identifier", `${lnurl.name || "unknown"}`],
-    ["text/plain", `Sats for ${lnurl.name || "unknown"}`],
+    ["text/plain", desc],
   ]);
 }
 
@@ -190,7 +192,8 @@ hono.post("/create", async (c) => {
     commentAllowed: json.commentAllowed,
     payerDataAllowed: json.payerDataAllowed,
     successMessage: json.successMessage,
-    successUrl: json.successUrl
+    successUrl: json.successUrl,
+    metadataDescription: json.metadataDescription
   };
 
   try {
